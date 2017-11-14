@@ -61,4 +61,32 @@ class Bounty
     db.close
   end
 
+  def self.find_by_id(id)
+    db = PG.connect({dbname: 'bounties', host: 'localhost'})
+    sql = "SELECT FROM bounties
+            WHERE id = $1
+    "
+      values = [id]
+      db.prepare("find",sql)
+      found_bounty = db.exec_prepared("find",values)[0]
+      db.close
+      return Bounty.new(found_bounty)
+  end
+
+  def self.update_by_id(id, type, value)
+    db = PG.connect({dbname: 'bounties', host: 'localhost'})
+    record = self.find_by_id(id)
+    record.type = value
+
+    sql = "UPDATE bounties
+          SET (name,bounty_value,cashed_in,collected_by) =
+              ($2,  $3,          $4,         $5)
+          WHERE id = $1
+    "
+    values = [record.id,record.name,record.bounty_value,record.cashed_in,record.collected_by]
+    db.prepare("update",sql)
+    db.exec_prepared("update",values)
+    db.close
+  end
+
 end

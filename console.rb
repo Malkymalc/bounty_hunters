@@ -13,5 +13,3 @@ bounty_new.bounty_value = '30687687'
 bounty_new.update
 
 bounty_new.delete
-
-# Bounty.update(3)
